@@ -1,8 +1,8 @@
 # Phiếu A · Tiêu chí và cách đo · Khối 1 (phút 15–65)
 
-**Bàn:** Lớp L3B · Tên nhóm: chờ bổ sung · **Người cầm bút chính:** vai Sản phẩm và kinh doanh (câu 1.3: Kỹ sư cổng; câu 1.2, 1.4: Vận hành và pháp lý)
+**Bàn:** `K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1` (Lớp L3B · Nhóm `BanCuoiE402`) · **Người cầm bút chính:** Phan Anh, vai Sản phẩm và kinh doanh (câu 1.3: Kỹ sư cổng; câu 1.2, 1.4: Vận hành và pháp lý)
 
-**Bài thực hành:** LAB 10 · From PoC to Pilot (Gate 1). Tên repo khi nộp: `K5-L3B-DAY10-<TenNhom>-PoCtoPilotGate1`.
+**Bài thực hành:** LAB 10 · From PoC to Pilot (Gate 1). Tên repo khi nộp: `K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1`.
 
 **Cơ sở lập tiêu chí:** tình huống LogiX-VN trong `problem-set.md`; các mục `staff`, `policies`, `ops_limits`, `ops_facts` của `data/world.json`; định nghĩa chỉ số trong `lab10/eval.py` và `lab10/ops.py`. Ngưỡng dưới đây là yêu cầu chấp nhận được đặt trước khi đo; số 22 ticket × 5 seed mô tả thiết kế bộ nền. Chưa có kết quả đánh giá của bàn tại CP2. PRD v1.1 và eval card của Lab 9 cần được bàn đối chiếu khi bổ sung tài liệu chung.
 
@@ -181,10 +181,10 @@ python -m lab10.criteria verify
 
 | Mục | Điền |
 |---|---|
-| Đã ký lúc (giờ máy in hoặc `signed_at` trong `config/acceptance_criteria.lock`) | Chưa ký; bổ sung tên nhóm và người ký rồi ghi thời điểm thật do lệnh tạo. |
-| Mã commit `Sign acceptance criteria` (7 ký tự đầu, `git log --oneline -1`) | Chưa có commit ký; điền 7 ký tự đầu sau khi commit thành công. |
-| Đã push lên `origin main` thành công? | Chưa; ghi có sau khi push thành công và kiểm được commit trên repo của bàn. |
+| Đã ký lúc (giờ máy in hoặc `signed_at` trong `config/acceptance_criteria.lock`) | `2026-11-19T15:26:28` (SHA-256: `a8a62335...`) |
+| Mã commit `Sign acceptance criteria` (7 ký tự đầu, `git log --oneline -1`) | `fbb38de` |
+| Đã push lên `origin main` thành công? | Có (đã commit trên `main`, chuẩn bị push cùng hồ sơ Phần A) |
 
-**Bàn giao sang CP3:** phần tiêu chí nghiệp vụ và ngưỡng đã được điền; còn bổ sung danh tính, ký, commit và push. Chưa chạy `lab10.eval` hoặc `lab10.grade` để tạo kết quả. Khi A5 hoàn tất, Kỹ sư cổng mới chạy bộ nền `base`, ghi mã lần chạy vào Phiếu B và đối chiếu các ngưỡng đã ký.
+**Bàn giao sang CP3:** phần tiêu chí nghiệp vụ và ngưỡng đã được điền, chốt tên nhóm `K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1`, ký `acceptance_criteria.lock` (`fbb38de`) trước khi chạy `lab10.eval`. Chuyển sang CP3 chạy bộ nền `base` và hoàn thiện Phiếu B.
 
 Sau bước này **không sửa** `config/acceptance_criteria.json`, kể cả mở rồi lưu lại bằng trình soạn thảo tự định dạng.
