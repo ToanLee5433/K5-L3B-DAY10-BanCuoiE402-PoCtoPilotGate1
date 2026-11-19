@@ -80,6 +80,34 @@ Một ca có thể được hoàn đúng phí trong khi lệnh ghi lỗi cho hã
 
 ---
 
+---
+
+## DamHongThai-2A202603927
+
+### Phần việc phụ trách
+
+Kỹ sư cổng. Phụ trách phần kỹ thuật trong vòng 1: Câu 2.1–2.2 (chạy đánh giá, dò `T-002@55`), Câu 2.6–2.8 (`lab10/guards.py`, bảo vệ lệnh ghi, kiểm behavioral test). Tiếp tục vai kỹ sư cổng ở vòng 2: Câu 3.1–3.5, trace thẻ `S3`, sửa guard và kiểm chứng ba mốc `before → after → prepared`.
+
+### Đóng góp cụ thể
+
+- Tham gia đối chiếu baseline và phân tích lỗi chìm `T-002@55`: phát hiện model dùng `delay_days = 5` từ lời khách thay vì `db_delay_days = 2`, dẫn tới hoàn sai `20.000đ` và ghi/lây lỗi oan cho hãng `VNX`.
+- Tham gia thiết kế và kiểm chứng các cổng viết trước lệnh ghi trong `lab10/guards.py`: đối chiếu quyền lợi qua tracking/policy, chặn hoàn sai hoặc hoàn lặp, chặn ghi/lọc trường hãng, và chuyển ca thiếu căn cứ sang người duyệt.
+- Tham gia behavioral test, unit test và các lần chạy `base`/`S3`; xác nhận sau sửa không hoàn sai, không ghi lỗi hãng oan, không lộ PII và không có regression so với bộ nền.
+- Là PIC chất lượng và quyền hạn trong Phiếu B mục B5, đồng thời là PIC của nhóm chất lượng khi cập nhật checklist sau thẻ `S3` ở Phiếu C mục C11.
+
+### Bằng chứng
+
+- Bộ nền vòng 1: `R-base-before-20261119-154446-db8f18` phát hiện hoàn sai `20.000đ`, `1` lỗi hãng oan; `R-base-after-20261119-154448-db8f18` đạt `110/110`, hoàn sai `0`, lỗi hãng oan `0`, PII `0`; `R-base-prepared-20261119-154450-db8f18` giữ `100%` và `13/13` unit tests.
+- Thẻ `S3`: `R-S3-after-20261119-163012-641d82` đạt `60/60`; `R-base-after-20261119-163126-641d82` đạt `110/110` không regression; `lab10.grade --incident S3` đạt `PASS-VISIBLE`.
+- File chính: `lab10/guards.py`, `lab10/monitors.py`, `config/operating_gates.json`, `Phiếu B B2/B5/B7.1–B7.3`, `Phiếu C C2/C7/C11`.
+
+### Exit ticket
+
+- **Một điều học được:** Cổng an toàn phải đối chiếu lệnh ghi với tracking, chính sách và sổ lịch sử thay vì tin dữ liệu do model hoặc khách khai; dữ liệu bị thiếu cũng cần chặn hoặc chuyển duyệt thay vì fail-open.
+- **Một điều còn chưa chắc:** Cần theo dõi dữ liệu production để phân biệt tracking bị trễ cập nhật với tracking thực sự sai, tránh vừa chặn tác hại vừa tạo quá nhiều ca chuyển người cho kiện hợp lệ.
+
+---
+
 ## HoVaTen-MSSV
 
 ### Phần việc phụ trách
