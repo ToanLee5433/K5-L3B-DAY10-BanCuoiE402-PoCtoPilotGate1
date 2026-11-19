@@ -16,7 +16,7 @@ Họ tên đầy đủ và MSSV của **mọi** thành viên; bàn 3 người th
 |   1 | Đàm Hồng Thái | 2A202603927 | Kỹ sư cổng | |
 |   2 | Nguyễn Hữu Mạnh | 2A202604015 | Kỹ sư cổng | |
 |   3 | Phan Nguyễn Phan Anh | 2A202604004 | Sản phẩm và kinh doanh | |
-|   4 | Lê Quý Toàn | 2A202603941 | Vận hành và pháp lý | |
+|   4 | Lê Quý Toàn | 2A202603941 | Vận hành và pháp lý | X |
 
 Ghi `members` trong `submission/submission.json` theo dạng `"HoVaTen-MSSV"`, khớp bảng trên.
 
@@ -28,28 +28,29 @@ Mỗi thành viên tự viết một mục bên dưới (chép mẫu, đổi ti�
 
 ### Phần việc phụ trách
 
-Vai **Vận hành và pháp lý** (kiêm thư ký tổng hợp nộp bài):
-- `templates/form-a-criteria.md`: mục A1 (câu 1.2) và mục A2 (câu 1.4 — telemetry production).
-- `templates/form-b-evaluation-gates.md`: mục B4 (HAZOP vòng 1), B5 (Checklist 9 nhóm lần 1 — vận hành & pháp lý), B7.5 (Runbook 1–3) và B7.6 (Giờ cao điểm).
-- `config/operating_gates.json`: điền khối `operations` và `legal` (giữ nguyên khối `business` cho vai Sản phẩm và kinh doanh).
-- Theo lịch làm việc nhóm: rà soát `submission/` và `lab10.check_submission` ở cuối buổi (khi có đủ bài của 3 thành viên còn lại).
+**Trưởng nhóm** kiêm vai **Vận hành và pháp lý** (và tổng hợp bài nộp lên `main`):
+- Chốt phân công, tổng hợp phần làm từ nhánh riêng của các bạn (`2A202604004`, `2A202603927`, `2A202604015`), sắp xếp lại thứ tự commit để `Sign acceptance criteria` và dấu thời gian ký khớp đúng quy định trước khi chạy `eval`.
+- Phụ trách phần vận hành và pháp lý trong **Phiếu A** (`1.2`, `1.4`), **Phiếu B** (`B4` HAZOP vòng 1, `B5` Checklist 9 nhóm, `B7.5–B7.6` Runbook 1–3 & giờ cao điểm) và **cổng `operations`, `legal`** trong `config/operating_gates.json`.
+- Phối hợp chốt Vòng 1 (`lab10.checkpoint`, quyết định `v1`); sang Vòng 2 sẽ phụ trách phần riêng của thẻ (`C3`), giả định môi trường (`C5`), Runbook phần 4–5 (`C11`) và gom `submission/` kiểm tra lần cuối.
 
 ### Đóng góp cụ thể
 
-- Hoàn thành phần Vận hành & Pháp lý và tổng hợp hoàn thiện **Phần A (CP1 + CP2 + CP3)**:
-  - Tổng hợp bản `config/acceptance_criteria.json` và `templates/form-a-criteria.md` từ nhánh `2A202604004`, chuẩn hoá LF qua `.gitattributes`, điền `team` (`K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1`) + `signed_by` (`Phan Anh`), chạy `lab10.criteria sign` (`fbb38de`, `2026-11-19T15:26:28`) trước mọi lần chạy `eval`.
-  - Hoàn thiện `config/operating_gates.json` (đủ `business`, `operations`, `legal`), code 3 cổng phòng ngừa vòng 1 trong `lab10/guards.py` (`pre_guard`, `_check_issue_refund`, `_check_carrier_fault`), hoàn thiện toàn bộ `Phiếu B` (`B0`–`B8`, Runbook 1–3, Giờ cao điểm, kiểm thử hành vi `--adhoc`), chạy `lab10.checkpoint` (`99b636e9`) và chốt quyết định `v1`.
+- **Thống nhất & ký tiêu chí (CP1–CP2):** Giữ nguyên bộ ngưỡng do Phan Anh chốt trên nhánh `2A202604004` (`pass_rate >= 0.98`, `pass_k >= 0.95`, 3 chỉ số an toàn = `0`, `cost <= 8.000đ`, `ROI >= 0.25`, `queue_stuck = 0`), điền `team` và `signed_by` vào `config/acceptance_criteria.json`. Do lúc kiểm nhánh cũ phát hiện file JSON bị lệch hash giữa CRLF trên Windows và LF trên Git, mình đã thêm `.gitattributes` khoá định dạng LF cho file này rồi chạy lại `lab10.criteria sign` trên `main` trước khi chạy `eval`.
+- **Cấu hình cổng vận hành & pháp lý (`config/operating_gates.json`):** Điền đủ thông số ca trực khớp `data/world.json` (`pic: NV-TUNG`, `approver_id: NV-HANH`, `1` người trực, `6 ca/giờ`, SLA `60 phút`, bật `decision_note: true` và kiểm mẫu `10%`, kênh `#ops-logix-pilot`, `4` điều kiện dừng); bật `carrier_fault_requires_recorded_cause: true` và chặn gửi các trường nhạy cảm (`customer_note`, `recipient_contact`, `name`, `phone`, `street`) ra bên thứ ba.
+- **Soạn hồ sơ & hoàn thiện Vòng 1:** Viết HAZOP cho `notify_carrier` / `file_carrier_fault` (`B4`), lập bảng Checklist 9 nhóm có PIC từng bạn (`B5`), soạn Runbook 1–3 và phương án giờ cao điểm (`B7.5–B7.6`). Sau khi chốt phương án cổng với nhóm, chạy đủ các mốc `base` → `after` → `checkpoint` → `prepared`, bổ sung phần còn thiếu ở `lab10/guards.py` và `Phiếu B` (`B0–B3`, `B6`, `B7.1–B7.4`, `B8`), ghép hàm `tracking_delay_mismatch_rate` của Mạnh vào `lab10/monitors.py`, kiểm 13/13 unit tests và đẩy lên `main`.
+- **Khai báo sử dụng AI:** Mình có dùng công cụ AI để hỗ trợ đối chiếu đề bài với `data/world.json`/`lab10`, kiểm tra lỗi lệch hash/nhánh git và rà câu chữ; các lệnh chạy đo đạc, trace và test đều được chạy kiểm chứng trực tiếp trên máy trước khi commit.
 
 ### Bằng chứng
 
-- Commit ký tiêu chí: `024b11e` (hash `a8a62335...`, `2026-11-19T15:43:37`)
-- Chốt cổng vòng 1 (`checkpoint`): `da2f415e` (`lab10/guards_round1.py`, `config/operating_gates.round1.json`, `config/round1.lock`)
-- Các lần chạy Vòng 1: `R-base-before-20261119-154446-db8f18` (base), `R-base-after-20261119-154448-db8f18` (after), `R-base-prepared-20261119-154450-db8f18` (prepared)
-- Phiếu đã điền: `templates/form-a-criteria.md` (`A1–A5`), `templates/form-b-evaluation-gates.md` (`B0–B8`)
+- Commit ký tiêu chí: `024b11e` (`2026-11-19T15:43:37`, hash file `a8a62335...` khớp `config/acceptance_criteria.lock`)
+- Chốt cổng vòng 1 (`lab10.checkpoint`): commit `ac4dd6b`, hash `da2f415e` (`lab10/guards_round1.py`, `config/operating_gates.round1.json`, `config/round1.lock`)
+- Cập nhật chữ ký Form A: commit `da0f743`
+- Các lần chạy Vòng 1: `R-base-before-20261119-154446-db8f18` (base: `109/110`, hỏng `T-002@55`), `R-base-after-20261119-154448-db8f18` (after: `110/110`), `R-base-prepared-20261119-154450-db8f18` (prepared: `110/110`, `9/9` ngưỡng trong `lab10.gate` ĐẠT, `13/13` unit tests OK)
+- File đã cập nhật: `TEAM.md`, `.gitattributes`, `config/acceptance_criteria.json`, `config/operating_gates.json`, `lab10/guards.py`, `lab10/monitors.py`, `templates/form-a-criteria.md`, `templates/form-b-evaluation-gates.md`
 
-### Khai báo sử dụng AI
+### Exit ticket
 
-- Có sử dụng trợ lý AI hỗ trợ rà soát đề bài, kiểm tra nhất quán cấu hình/trace, đối chiếu công thức và soạn thảo nháp; toàn bộ số liệu, lệnh chạy và kết quả kiểm thử đều do thành viên trực tiếp chạy kiểm chứng trong repo.
+- *(Sẽ điền nốt sau khi nhóm nhận thẻ sự cố ở Vòng 2, xử lý xong Phiếu C và chạy `lab10.grade`)*
 
 ---
 
