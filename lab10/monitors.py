@@ -40,9 +40,19 @@ def tracking_delay_mismatch_rate(trials):
     return mismatches / max(1, len(trials))
 
 
+def missing_delay_cause_rate(trials):
+    """Tỉ lệ lượt có giao trễ nhưng tracking DB chưa ghi nguyên nhân (`cause_recorded == False`)."""
+    missing = sum(
+        any(e.get("type") == "tracking" and e.get("cause_recorded") is False for e in t["events"])
+        for t in trials
+    )
+    return missing / max(1, len(trials))
+
+
 MONITORS = {
     "escalation_rate": escalation_rate,     # có sẵn; KHÔNG tính là metric mới của đội
     "guard_intervention_rate": guard_intervention_rate,
     "tracking_delay_mismatch_rate": tracking_delay_mismatch_rate,
+    "missing_delay_cause_rate": missing_delay_cause_rate,
 }
 STARTER_MONITORS = ("escalation_rate",)

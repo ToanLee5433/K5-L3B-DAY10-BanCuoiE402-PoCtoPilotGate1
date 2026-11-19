@@ -40,7 +40,8 @@ def _check_issue_refund(ctx, action):
     parcel = H.ticket_parcel(order, ctx.ticket, ctx.as_of)
     delay = H.db_delay_days(parcel, ctx.as_of)
     cause = parcel.get("delay_cause")
-    entitled = H.entitlement_vnd(pol, order, delay, cause) if cause else 0
+    # Khi tracking chưa ghi nhận delay_cause (None), khách vẫn được hoàn theo DB; chỉ chặn ghi lỗi hãng.
+    entitled = H.entitlement_vnd(pol, order, delay, cause)
 
     if entitled <= 0:
         ctx.log("guard_deny_no_entitlement", db_delay=delay, cause=cause, asked=action.get("amount_vnd"))
@@ -79,6 +80,13 @@ def _check_carrier_fault(ctx, action):
     if not H.carrier_at_fault(pol, parcel, delay):
         ctx.log("guard_deny_carrier_fault", parcel_id=parcel["parcel_id"], db_delay=delay, cause=parcel.get("delay_cause"))
         return Verdict.deny("chưa đủ điều kiện ghi lỗi hãng theo tracking DB")
+
+    max_strikes = ctx.tools.ops_limits().get("max_auto_strikes_per_carrier_per_day")
+    cid = parcel["carrier_id"]
+    current_strikes = len(ctx.tools.fault_rows(carrier_id=cid))
+    if max_strikes is not None and current_strikes >= max_strikes:
+        ctx.log("guard_deny_carrier_daily_cap", carrier_id=cid, current_strikes=current_strikes, cap=max_strikes)
+        return Verdict.deny("vượt trần lỗi tự động trong ngày của hãng: dừng ghi tự động")
 
     if action.get("parcel_id") != parcel["parcel_id"] or action.get("carrier_id") != parcel["carrier_id"]:
         ctx.log("guard_fix_carrier_parcel", old_carrier=action.get("carrier_id"), new_carrier=parcel["carrier_id"])

@@ -1,12 +1,17 @@
 {
-  "team": "",
-  "members": [],
-  "incident": "",
-  "decision_v1": "",
-  "decision_v2": "",
+  "team": "K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1",
+  "members": [
+    "DamHongThai-2A202603927",
+    "NguyenHuuManh-2A202604015",
+    "PhanNguyenPhanAnh-2A202604004",
+    "LeQuyToan-2A202603941"
+  ],
+  "incident": "S3",
+  "decision_v1": "Tiếp tục",
+  "decision_v2": "Tiếp tục",
   "three_lines": {
-    "environment_assumption": "",
-    "reduce_or_prevent": "",
-    "measure_in_pilot": ""
+    "environment_assumption": "Thiết kế giả định dữ liệu nguồn policies được cập nhật đúng ngày hiệu lực và nhân viên kho nhập đúng mã nguyên nhân giao trễ (delay_cause) thay vì gán nhầm nguyên nhân hãng cho đơn trễ do thiên tai.",
+    "reduce_or_prevent": "Cổng code và cấu hình hiện tại NGĂN hẳn các lỗi đọc nhầm cờ index_active cũ, tự động quy lỗi hãng khi thiếu delay_cause và vượt trần 2 lỗi/hãng/ngày từ phía trợ lý; nhưng với trường hợp dữ liệu đầu vào trong DB bị nhập sai sẵn nguyên nhân thì hệ thống chỉ GIẢM thiệt hại qua trần lỗi mỗi ngày và cần đối soát con người.",
+    "measure_in_pilot": "Trong tuần đầu pilot thật cần đo lại độ trễ cập nhật trường delay_cause sau bão/cao điểm, tỉ lệ sai lệch khi nhân viên phân loại nguyên nhân giao trễ giữa hãng và thiên tai, thời gian chờ duyệt thực tế khi phát sinh khiếu nại và chi phí nhân sự đối soát cuối ca."
   }
 }

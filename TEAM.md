@@ -5,7 +5,7 @@
 - Tên nhóm (`TenNhom`, không dấu, không khoảng trắng): `BanCuoiE402`
 - Lớp: `L3B`
 - Repo của bàn: `K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1`
-- Thẻ sự cố đã bốc (S1–S8): *(chưa tới phút 125 — sẽ điền ở Vòng 2)*
+- Thẻ sự cố đã bốc (S1–S8): `S3` (*Hãng miền Tây bị phạt vì bão*)
 
 ## Thành viên
 
@@ -46,11 +46,13 @@ Mỗi thành viên tự viết một mục bên dưới (chép mẫu, đổi ti�
 - Chốt cổng vòng 1 (`lab10.checkpoint`): commit `ac4dd6b`, hash `da2f415e` (`lab10/guards_round1.py`, `config/operating_gates.round1.json`, `config/round1.lock`)
 - Cập nhật chữ ký Form A: commit `da0f743`
 - Các lần chạy Vòng 1: `R-base-before-20261119-154446-db8f18` (base: `109/110`, hỏng `T-002@55`), `R-base-after-20261119-154448-db8f18` (after: `110/110`), `R-base-prepared-20261119-154450-db8f18` (prepared: `110/110`, `9/9` ngưỡng trong `lab10.gate` ĐẠT, `13/13` unit tests OK)
-- File đã cập nhật: `TEAM.md`, `.gitattributes`, `config/acceptance_criteria.json`, `config/operating_gates.json`, `lab10/guards.py`, `lab10/monitors.py`, `templates/form-a-criteria.md`, `templates/form-b-evaluation-gates.md`
+- Các lần chạy Vòng 2 (thẻ `S3`): `R-S3-grade-20261119-162704-db8f18` (prepared lúc mới nhận thẻ), `R-S3-after-20261119-163012-641d82` (`60/60`), `R-base-after-20261119-163126-641d82` (`110/110`), `R-S3-grade-20261119-163012-641d82` (`PASS-VISIBLE`, `5/5` kiểm tra xanh)
+- File đã cập nhật: `TEAM.md`, `.gitattributes`, `config/acceptance_criteria.json`, `config/operating_gates.json`, `lab10/guards.py`, `lab10/monitors.py`, `templates/form-a-criteria.md`, `templates/form-b-evaluation-gates.md`, `templates/form-c-incident.md`, `submission/submission.json`
 
 ### Exit ticket
 
-- *(Sẽ điền nốt sau khi nhóm nhận thẻ sự cố ở Vòng 2, xử lý xong Phiếu C và chạy `lab10.grade`)*
+- **Một điều học được:** Khi viết guard phòng ngừa phải tách rõ ranh giới giữa trách nhiệm nội bộ và đối tác — ở thẻ `S3`, việc gộp nhầm điều kiện thiếu `delay_cause` vào nhánh tính hoàn tiền đã cắt nhầm `210.000đ` của khách dù chỉ cần chặn ghi lỗi hãng; tách bạch 2 nhánh và chặn thêm trần lỗi/ngày của hãng (`max_auto_strikes_per_carrier_per_day`) giải quyết gọn cả 3 nguyên nhân.
+- **Một điều còn chưa chắc:** Trường hợp kho nhập **sai** nguyên nhân (gõ `"CARRIER"` cho đơn đáng lẽ là `"FORCE_MAJEURE"`) chưa thể phát hiện tự động chỉ từ dữ liệu mock hiện tại, nên cần theo dõi thực tế qua đối soát cuối ca với `NV-OANH` ở tuần pilot đầu.
 
 ---
 
