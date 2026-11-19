@@ -19,7 +19,30 @@ def escalation_rate(trials):
     return sum(t["status"] == "escalated" for t in trials) / max(1, len(trials))
 
 
+def guard_intervention_rate(trials):
+    return sum(any(e.get("type") == "gate" and e.get("action") in ("deny", "escalate", "modify")
+                   for e in t["events"]) for t in trials) / max(1, len(trials))
+
+
+def tracking_delay_mismatch_rate(trials):
+    """Fraction of trials where the model used a claimed delay that differed from tracking."""
+    mismatches = 0
+    for trial in trials:
+        if any(
+            event["type"] == "model_override"
+            and event.get("field") == "delay_days"
+            and event.get("db") is not None
+            and event.get("ticket") is not None
+            and event["db"] != event["ticket"]
+            for event in trial["events"]
+        ):
+            mismatches += 1
+    return mismatches / max(1, len(trials))
+
+
 MONITORS = {
     "escalation_rate": escalation_rate,     # có sẵn; KHÔNG tính là metric mới của đội
+    "guard_intervention_rate": guard_intervention_rate,
+    "tracking_delay_mismatch_rate": tracking_delay_mismatch_rate,
 }
 STARTER_MONITORS = ("escalation_rate",)
