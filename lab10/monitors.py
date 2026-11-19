@@ -49,10 +49,30 @@ def missing_delay_cause_rate(trials):
     return missing / max(1, len(trials))
 
 
+def _guard_event_rate(trials, kind):
+    count = sum(
+        any(event.get("type") == "guard" and event.get("kind") == kind for event in trial["events"])
+        for trial in trials
+    )
+    return count / max(1, len(trials))
+
+
+def policy_index_mismatch_rate(trials):
+    """Fraction of trials where the indexed policy differs from the effective policy."""
+    return _guard_event_rate(trials, "policy_index_mismatch")
+
+
+def carrier_strike_cap_hit_rate(trials):
+    """Fraction of trials where the carrier's daily strike limit blocked a write."""
+    return _guard_event_rate(trials, "guard_deny_carrier_daily_cap")
+
+
 MONITORS = {
     "escalation_rate": escalation_rate,     # có sẵn; KHÔNG tính là metric mới của đội
     "guard_intervention_rate": guard_intervention_rate,
     "tracking_delay_mismatch_rate": tracking_delay_mismatch_rate,
     "missing_delay_cause_rate": missing_delay_cause_rate,
+    "policy_index_mismatch_rate": policy_index_mismatch_rate,
+    "carrier_strike_cap_hit_rate": carrier_strike_cap_hit_rate,
 }
 STARTER_MONITORS = ("escalation_rate",)

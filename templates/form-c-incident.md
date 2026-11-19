@@ -34,6 +34,8 @@ Mỗi lệnh `lab10.eval` và `lab10.grade` tự ghi một dòng vào `runs/jour
 | 2 | `R-S3-after-20261119-163012-641d82` | S3 · after | Sửa `_check_issue_refund` (giữ quyền lợi khi `delay_cause = null`), thêm chặn trần `max_auto_strikes_per_carrier_per_day = 2` ở `_check_carrier_fault`, thêm `missing_delay_cause_rate` trong `monitors.py`, khoá LF qua `.gitattributes` | `1.0 [1.0, 1.0]` | `1.0` | `0 · 0 · 0` | `0.0833` | Đạt `60/60` lượt gói `S3`, hết `under_refund_vnd` lẫn `wrongful_carrier_faults`, `ROI = 1.27`. |
 | 3 | `R-base-after-20261119-163126-641d82` | base · after | (kiểm không regression trên bộ nền sau sửa `S3`) | `1.0 [1.0, 1.0]` | `1.0` | `0 · 0 · 0` | `0.2273` | Giữ nguyên `110/110` lượt bộ nền không regression; `missing_delay_cause_rate` = `0.0` (so với `0.166667` trên `S3`). |
 | 4 | `R-S3-grade-20261119-163012-641d82` | S3 · grade | Tổng kiểm `base · prepared · after` bằng `lab10.grade --incident S3` | `1.0 [1.0, 1.0]` | `1.0` | `0 · 0 · 0` | `0.0833` | `PASS-VISIBLE`: đạt `5/5` kiểm tra (`integrity`, `criteria`, `visible`, `regression`, `monitor`). |
+| 5 | `R-base-after-20261119-164821-d1e2fa` | base · after | Kiểm lại bộ nền với các chỉ số mới | `1.0 [1.0, 1.0]` | `1.0` | `0 · 0 · 0` | `0.2273` | 110/110 lượt đạt. |
+| 6 | `R-S3-grade-20261119-164821-d1e2fa` | S3 · grade | Kiểm lại ba mốc và hai chỉ số S3 bổ sung | `1.0 [1.0, 1.0]` | `1.0` | `0 · 0 · 0` | `0.0833` | `PASS-VISIBLE`, S3 after đạt 60/60 và hai chỉ số phân biệt S3 với bộ nền. |
 
 ---
 
@@ -342,6 +344,15 @@ Thẻ S5 dùng mục này cho một con số kinh doanh: chi phí mỗi ticket t
 | **Khung thời gian / ngưỡng báo động** | Tính sau mỗi lần chạy và tổng hợp cuối ca `480 phút`. Nếu `missing_delay_cause_rate > 0.0` (chỉ cần ≥ 1 đơn trễ chưa có nguyên nhân), báo `#ops-logix-pilot` để `NV-OANH` và kho rà soát cập nhật `delay_cause` trong ngày. |
 | **Điểm mù** (chỉ số này KHÔNG thấy gì) | Không thấy trường hợp nhân viên nhập **sai** `delay_cause` (nhập nhầm `"CARRIER"` thay vì `"FORCE_MAJEURE"`) vì `cause_recorded` vẫn là `true`; cũng không tự biết đơn vượt trần `max_auto_strikes_per_carrier_per_day` (nhánh này đo qua `guard_intervention_rate`). |
 | Giá trị trên bộ nền · trên thẻ (đọc mục `monitor` của report) | Trên bộ nền (`after`): `0.0` (`R-base-after-20261119-163126-641d82`) · Trên thẻ `S3` (`before` & `after`): **`0.166667`** (`10/60` lượt = `S3-20`, `S3-21`); `guard_intervention_rate` sáng từ `0.009091` → `0.333333`. |
+
+**Hai chỉ số bổ sung kiểm chứng ở mốc after**
+
+| Tên trong `MONITORS` | Thước đo | Dữ liệu `trial.events` | Bộ nền | S3 |
+|---|---|---|---:|---:|
+| `policy_index_mismatch_rate` | Tỉ lệ lượt mà index chính sách lệch phiên bản hiệu lực | `type=guard`, `kind=policy_index_mismatch`, kèm `indexed_ids` và `effective_id` | 0/110 | 60/60 |
+| `carrier_strike_cap_hit_rate` | Tỉ lệ lượt dừng ghi lỗi vì hãng đã chạm trần trong ngày | `type=guard`, `kind=guard_deny_carrier_daily_cap`, kèm `carrier_id`, `current_strikes` và `cap` | 0/110 | 10/60 |
+
+Đếm mỗi lượt có ít nhất một sự kiện khớp rồi chia cho tổng số lượt. Lượt thiếu sự kiện vẫn thuộc mẫu số và tập rỗng trả về 0. Đọc theo từng lần chạy, mở trace để đối chiếu các lượt có tín hiệu. Chỉ số index cần có policy hiệu lực để so sánh. Chỉ số chạm trần chỉ đo lệnh đã đi tới cổng ghi. Nguồn số liệu là `R-S3-grade-20261119-164821-d1e2fa`.
 
 ---
 

@@ -1,8 +1,8 @@
 {
- "run_id": "R-S3-grade-20261119-163501-641d82",
+ "run_id": "R-S3-grade-20261119-164821-d1e2fa",
  "incident": "S3",
  "grader_version": "lab10-1.0",
- "code_hash": "641d82393b354e746f2000093ccec9ef600d2f314bc530168ff0647379a20d84",
+ "code_hash": "d1e2fabd631ecfe26023545c27aa3a23a0246df6705f2813bf7b8d8768412247",
  "integrity": {
   "ok": true,
   "changed": [],
@@ -140,7 +140,9 @@
     "escalation_rate": 0.227273,
     "guard_intervention_rate": 0.0,
     "tracking_delay_mismatch_rate": 0.009091,
-    "missing_delay_cause_rate": 0.0
+    "missing_delay_cause_rate": 0.0,
+    "policy_index_mismatch_rate": 0.0,
+    "carrier_strike_cap_hit_rate": 0.0
    },
    "by_segment": {
     "warehouse": [
@@ -394,7 +396,9 @@
     "escalation_rate": 0.0,
     "guard_intervention_rate": 0.0,
     "tracking_delay_mismatch_rate": 0.0,
-    "missing_delay_cause_rate": 0.166667
+    "missing_delay_cause_rate": 0.166667,
+    "policy_index_mismatch_rate": 0.0,
+    "carrier_strike_cap_hit_rate": 0.0
    },
    "by_segment": {
     "warehouse": [
@@ -584,7 +588,9 @@
     "escalation_rate": 0.227273,
     "guard_intervention_rate": 0.009091,
     "tracking_delay_mismatch_rate": 0.009091,
-    "missing_delay_cause_rate": 0.0
+    "missing_delay_cause_rate": 0.0,
+    "policy_index_mismatch_rate": 0.0,
+    "carrier_strike_cap_hit_rate": 0.0
    },
    "by_segment": {
     "warehouse": [
@@ -813,7 +819,9 @@
     "escalation_rate": 0.083333,
     "guard_intervention_rate": 0.166667,
     "tracking_delay_mismatch_rate": 0.0,
-    "missing_delay_cause_rate": 0.166667
+    "missing_delay_cause_rate": 0.166667,
+    "policy_index_mismatch_rate": 0.0,
+    "carrier_strike_cap_hit_rate": 0.0
    },
    "by_segment": {
     "warehouse": [
@@ -1003,7 +1011,9 @@
     "escalation_rate": 0.227273,
     "guard_intervention_rate": 0.009091,
     "tracking_delay_mismatch_rate": 0.009091,
-    "missing_delay_cause_rate": 0.0
+    "missing_delay_cause_rate": 0.0,
+    "policy_index_mismatch_rate": 0.0,
+    "carrier_strike_cap_hit_rate": 0.0
    },
    "by_segment": {
     "warehouse": [
@@ -1211,7 +1221,9 @@
     "escalation_rate": 0.083333,
     "guard_intervention_rate": 0.333333,
     "tracking_delay_mismatch_rate": 0.0,
-    "missing_delay_cause_rate": 0.166667
+    "missing_delay_cause_rate": 0.166667,
+    "policy_index_mismatch_rate": 1.0,
+    "carrier_strike_cap_hit_rate": 0.166667
    },
    "by_segment": {
     "warehouse": [
@@ -1321,9 +1333,9 @@
   }
  },
  "run_ids": {
-  "before": "R-S3-before-20261119-163502-641d82",
-  "prepared": "R-S3-prepared-20261119-163502-641d82",
-  "after": "R-S3-after-20261119-163502-641d82"
+  "before": "R-S3-before-20261119-164822-d1e2fa",
+  "prepared": "R-S3-prepared-20261119-164822-d1e2fa",
+  "after": "R-S3-after-20261119-164822-d1e2fa"
  },
  "visible": {
   "before_red": true,
@@ -1347,7 +1359,9 @@
   "new": [
    "guard_intervention_rate",
    "tracking_delay_mismatch_rate",
-   "missing_delay_cause_rate"
+   "missing_delay_cause_rate",
+   "policy_index_mismatch_rate",
+   "carrier_strike_cap_hit_rate"
   ],
   "lit": [
    {
@@ -1379,6 +1393,18 @@
     "stage": "after",
     "base": 0.0,
     "incident": 0.166667
+   },
+   {
+    "name": "policy_index_mismatch_rate",
+    "stage": "after",
+    "base": 0.0,
+    "incident": 1.0
+   },
+   {
+    "name": "carrier_strike_cap_hit_rate",
+    "stage": "after",
+    "base": 0.0,
+    "incident": 0.166667
    }
   ],
   "errors": []
@@ -1407,5 +1433,5 @@
  "hard_gates_ok": true,
  "score": null,
  "verdict": "PASS-VISIBLE (chưa chạy test ẩn)",
- "seconds": 0.721
+ "seconds": 0.397
 }

@@ -2,10 +2,10 @@
 
 *Đây là kết quả TỰ KIỂM TRA của bàn, không phải điểm. Bài được một team chấm tự động chấm lại sau buổi học.*
 
-- Mã lần chạy: `R-S3-grade-20261119-163501-641d82` · bàn: `K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1` · grader `lab10-1.0` · 0.721s
-- Ba mốc: base `R-S3-before-20261119-163502-641d82` · prepared `R-S3-prepared-20261119-163502-641d82` · after `R-S3-after-20261119-163502-641d82` (report + trace trong runs/)
+- Mã lần chạy: `R-S3-grade-20261119-164821-d1e2fa` · bàn: `K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1` · grader `lab10-1.0` · 0.397s
+- Ba mốc: base `R-S3-before-20261119-164822-d1e2fa` · prepared `R-S3-prepared-20261119-164822-d1e2fa` · after `R-S3-after-20261119-164822-d1e2fa` (report + trace trong runs/)
 - Mốc prepared (cổng vòng 1): đã chốt `da2f415e`, còn nguyên
-- Hash code đội (guards + monitors + switches + cổng vận hành): `641d82393b35`
+- Hash code đội (guards + monitors + switches + cổng vận hành): `d1e2fabd631e`
 - Hash Bản tiêu chí chấp nhận: `a8a623359adf` · đã ký: `a8a623359adf` · KHÔNG ĐỔI
 - Thẻ đang kiểm: `S3` · dòng "Thẻ đã bốc" bàn ghi trong phiếu: S3 · khớp
 
@@ -16,7 +16,7 @@
 | 3 visible | ✅ | base có vấn đề: True; after sạch: True; ticket còn hỏng: không; trần còn vượt: không |
 | 4 hidden | — | máy này không có bài kiểm tra ẩn (team chấm sẽ chạy sau buổi học) |
 | 5 regression | ✅ | bộ nền pass_rate 0.9909 → 1.0; ca mới hỏng: không |
-| 6 monitor | ✅ | metric mới: ['guard_intervention_rate', 'tracking_delay_mismatch_rate', 'missing_delay_cause_rate']; sáng đèn: [('guard_intervention_rate', 'after', 0.009091, 0.333333), ('tracking_delay_mismatch_rate', 'before', 0.009091, 0.0), ('tracking_delay_mismatch_rate', 'after', 0.009091, 0.0), ('missing_delay_cause_rate', 'before', 0.0, 0.166667), ('missing_delay_cause_rate', 'after', 0.0, 0.166667)] |
+| 6 monitor | ✅ | metric mới: ['guard_intervention_rate', 'tracking_delay_mismatch_rate', 'missing_delay_cause_rate', 'policy_index_mismatch_rate', 'carrier_strike_cap_hit_rate']; sáng đèn: [('guard_intervention_rate', 'after', 0.009091, 0.333333), ('tracking_delay_mismatch_rate', 'before', 0.009091, 0.0), ('tracking_delay_mismatch_rate', 'after', 0.009091, 0.0), ('missing_delay_cause_rate', 'before', 0.0, 0.166667), ('missing_delay_cause_rate', 'after', 0.0, 0.166667), ('policy_index_mismatch_rate', 'after', 0.0, 1.0), ('carrier_strike_cap_hit_rate', 'after', 0.0, 0.166667)] |
 
 **Kinh doanh · vận hành · pháp lý trên gói sự cố bàn nhìn thấy** (tiền tính cho một ngày giả lập)
 

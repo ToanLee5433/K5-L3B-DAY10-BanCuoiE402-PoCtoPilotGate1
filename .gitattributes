@@ -5,3 +5,9 @@ incidents/** text eol=lf
 lab10/*.py text eol=lf
 lab10/*.json text eol=lf
 tests/*.py text eol=lf
+
+# The round-one lock hashes the Windows snapshots and their submission copies.
+/lab10/guards_round1.py text eol=crlf
+/config/operating_gates.round1.json text eol=crlf
+/submission/code/guards_round1.py text eol=crlf
+/submission/config/operating_gates.round1.json text eol=crlf

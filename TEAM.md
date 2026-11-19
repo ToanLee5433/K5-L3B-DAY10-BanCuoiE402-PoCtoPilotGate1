@@ -60,16 +60,23 @@ Mỗi thành viên tự viết một mục bên dưới (chép mẫu, đổi ti�
 
 ### Phần việc phụ trách
 
-Kỹ sư cổng. Tham gia đối chiếu tiêu chí, dò trace, thêm chỉ số theo dõi `tracking_delay_mismatch_rate` trong `lab10/monitors.py` (ghép từ nhánh `2A202604015`).
+Kỹ sư cổng. Đối chiếu tiêu chí đã ký, chạy đánh giá và dò trace trên bộ nền và thẻ S3. Viết và kiểm chứng các chỉ số theo dõi ở Phiếu C mục C8.
 
 ### Đóng góp cụ thể
 
-- Thêm `tracking_delay_mismatch_rate` vào `lab10/monitors.py` (`MONITORS`) để đếm tỉ lệ lượt model dùng số ngày trễ khác tracking (`0.009091` = `1/110` lượt trên bộ nền).
-- Khai báo sử dụng AI: Có sử dụng Codex để đọc code, viết chỉ số và đối chiếu bằng chứng chạy lab.
+- Đăng ký `tracking_delay_mismatch_rate` để đo tỉ lệ lượt model dùng số ngày trễ khác tracking. Bổ sung `policy_index_mismatch_rate` và `carrier_strike_cap_hit_rate` để theo dõi hai nguyên nhân khác của S3.
+- Chạy lại S3 và hồi quy bộ nền trên bản mới của nhóm. Khôi phục đúng định dạng xuống dòng của bản chốt để lệnh `lab10.checkpoint verify` kiểm được hash trên checkout mới.
+- Có dùng Codex để đọc code, viết chỉ số và đối chiếu bằng chứng chạy lab.
+
+### Bằng chứng
+
+- Bộ nền `R-base-after-20261119-164821-d1e2fa` đạt 110/110 lượt. Trace `T-002@55` qua cổng và chỉ số lệch độ trễ ghi nhận 1/110 lượt.
+- S3 `R-S3-grade-20261119-164821-d1e2fa` đạt `PASS-VISIBLE`, mốc after đạt 60/60 lượt. Trace `S3-01@11` ghi index v3 lệch phiên bản hiệu lực v4 và `S3-42@11` ghi cổng chặn khi MKD đã có hai lỗi trong ngày. [Báo cáo ba mốc](submission/runs/grade-report.md).
+- 13/13 bài kiểm thử công khai đạt.
 
 ### Exit ticket
 
-- *(Sẽ cập nhật sau khi cả nhóm hoàn tất Vòng 2 và chạy `lab10.grade`)*
+Một ca có thể được hoàn đúng phí trong khi lệnh ghi lỗi cho hãng phải dừng. Cần đối soát sau bão để biết nguyên nhân trễ cập nhật muộn đến mức nào và kiểm chứng tỉ lệ cảnh báo trong ca thật.
 
 ---
 

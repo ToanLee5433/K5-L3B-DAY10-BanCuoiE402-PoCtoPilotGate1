@@ -15,8 +15,12 @@ def _current_policy(ctx):
 
 def pre_guard(ctx):
     """Cổng 1 (Pre-mortem & B3 drift): ghim đúng phiên bản chính sách hiệu lực theo ctx.as_of."""
-    pol = H.effective_policy(ctx.tools.lookup_policies(), ctx.as_of)
+    policies = ctx.tools.lookup_policies()
+    pol = H.effective_policy(policies, ctx.as_of)
     if pol is not None:
+        indexed_ids = [policy["policy_id"] for policy in policies if policy.get("index_active")]
+        if indexed_ids != [pol["policy_id"]]:
+            ctx.log("policy_index_mismatch", indexed_ids=indexed_ids, effective_id=pol["policy_id"])
         return Verdict.allow(policy_id=pol["policy_id"])
     return Verdict.allow()
 
