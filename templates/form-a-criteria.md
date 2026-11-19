@@ -1,6 +1,6 @@
 # Phiếu A · Tiêu chí và cách đo · Khối 1 (phút 15–65)
 
-**Bàn:** `K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1` (Lớp L3B · Nhóm `BanCuoiE402`) · **Người cầm bút chính:** Phan Anh, vai Sản phẩm và kinh doanh (câu 1.3: Kỹ sư cổng; câu 1.2, 1.4: Vận hành và pháp lý)
+**Bàn:** `K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1` (Lớp L3B · Nhóm `BanCuoiE402`) · **Người cầm bút chính:** Phan Nguyễn Phan Anh (`2A202604004`), vai Sản phẩm và kinh doanh (câu 1.3: Kỹ sư cổng; câu 1.2, 1.4: Vận hành và pháp lý)
 
 **Bài thực hành:** LAB 10 · From PoC to Pilot (Gate 1). Tên repo khi nộp: `K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1`.
 
@@ -167,9 +167,9 @@ thì chúng tôi sẽ không chọn Tiếp tục; nếu sau một vòng sửa v�
 Soát lại `config/acceptance_criteria.json` lần cuối (tên bàn ở `team`, người ký ở `signed_by`, đủ ngưỡng, `decision_rule`,
 `stop_condition`), rồi chạy **trước khi chạy đánh giá lần nào**:
 
-**Thông tin còn bổ sung trước khi ký:** tên nhóm/repo và `team` giống hệt nhau, `signed_by` là người được bàn phân công ký. Lớp đã xác nhận là L3B. Điền danh tính Git theo mã học viên trưởng nhóm và email giả `<MSSV>@example.com`; không dùng email cá nhân. Các trường `team` và `signed_by` trong JSON hiện để trống để bổ sung sau.
+**Thông tin đã chốt:** lớp L3B, nhóm `BanCuoiE402`; `team = K5-L3B-DAY10-BanCuoiE402-PoCtoPilotGate1`, `signed_by = Phan Anh (Sản phẩm và kinh doanh)`. Người phụ trách nội dung tiêu chí là Phan Nguyễn Phan Anh (`2A202604004`). Tiêu chí đã ký lúc `2026-11-19T15:43:37`, commit `024b11e`; chữ ký và byte của file JSON được giữ nguyên. Danh tính Git theo mã học viên và email giả là yêu cầu khi ghi lịch sử nộp bài; không ký lại hoặc sửa bản tiêu chí đã niêm phong.
 
-Chạy từng dòng trong PowerShell sau khi có đủ thông tin; chỉ chuyển sang CP3 khi commit ký đã được push thành công:
+Các lệnh dưới đây ghi lại quy trình ký đã thực hiện; hiện chỉ dùng `python -m lab10.criteria verify` để đối chiếu, không chạy ký lại:
 
 ```powershell
 python -m lab10.criteria sign

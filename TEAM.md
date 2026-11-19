@@ -80,13 +80,11 @@ Một ca có thể được hoàn đúng phí trong khi lệnh ghi lỗi cho hã
 
 ---
 
----
-
 ## DamHongThai-2A202603927
 
 ### Phần việc phụ trách
 
-Kỹ sư cổng. Phụ trách phần kỹ thuật trong vòng 1: Câu 2.1–2.2 (chạy đánh giá, dò `T-002@55`), Câu 2.6–2.8 (`lab10/guards.py`, bảo vệ lệnh ghi, kiểm behavioral test). Tiếp tục vai kỹ sư cổng ở vòng 2: Câu 3.1–3.5, trace thẻ `S3`, sửa guard và kiểm chứng ba mốc `before → after → prepared`.
+Kỹ sư cổng. Phụ trách phần kỹ thuật trong vòng 1: Câu 2.1–2.2 (chạy đánh giá, dò `T-002@55`), Câu 2.6–2.8 (`lab10/guards.py`, bảo vệ lệnh ghi, kiểm behavioral test). Tiếp tục vai kỹ sư cổng ở vòng 2: Câu 3.1–3.5, trace thẻ `S3`, sửa guard và kiểm chứng ba mốc `base → prepared → after`.
 
 ### Đóng góp cụ thể
 
@@ -97,6 +95,7 @@ Kỹ sư cổng. Phụ trách phần kỹ thuật trong vòng 1: Câu 2.1–2.2 
 
 ### Bằng chứng
 
+- Dấu vết nhánh kỹ thuật `origin/2A202603927`: commit `500c337` bổ sung cổng vòng 1 và `guard_intervention_rate`; hồ sơ nộp dùng tiêu chí và bản chốt chung trên `main`.
 - Bộ nền vòng 1: `R-base-before-20261119-154446-db8f18` phát hiện hoàn sai `20.000đ`, `1` lỗi hãng oan; `R-base-after-20261119-154448-db8f18` đạt `110/110`, hoàn sai `0`, lỗi hãng oan `0`, PII `0`; `R-base-prepared-20261119-154450-db8f18` giữ `100%` và `13/13` unit tests.
 - Thẻ `S3`: `R-S3-after-20261119-163012-641d82` đạt `60/60`; `R-base-after-20261119-163126-641d82` đạt `110/110` không regression; `lab10.grade --incident S3` đạt `PASS-VISIBLE`.
 - File chính: `lab10/guards.py`, `lab10/monitors.py`, `config/operating_gates.json`, `Phiếu B B2/B5/B7.1–B7.3`, `Phiếu C C2/C7/C11`.
@@ -108,20 +107,28 @@ Kỹ sư cổng. Phụ trách phần kỹ thuật trong vòng 1: Câu 2.1–2.2 
 
 ---
 
-## HoVaTen-MSSV
+## PhanNguyenPhanAnh-2A202604004
 
 ### Phần việc phụ trách
 
-Vai trong bàn; câu nào của đề, mục nào của phiếu A/B/C, file nào (`lab10/guards.py`, `config/operating_gates.json`, …).
+Vai **Sản phẩm và kinh doanh**. Chủ trì Phiếu A câu 1.1, 1.5, 1.6; tổng hợp đầu vào cách đo từ các vai liên quan. Phụ trách Phiếu B B3, lăng kính kinh doanh ở B6, B7.4 và nội dung quyết định v1 tại B8; sang S3 đối chiếu C3.5, specification ở C5, rủi ro chính sách/chi phí tại C10, quyết định v2 và ba dòng bắt buộc tại C12. Phối hợp hoàn thiện cấu hình business, điều kiện dừng kinh tế và `submission/submission.json`.
 
 ### Đóng góp cụ thể
 
-...
+- Hoàn thiện mục tiêu cấp hệ thống và tiêu chí trước khi đo: pass_rate >= 98%, pass^k >= 95%, ba chỉ số an toàn = 0, chi phí <= 8.000đ/ticket, ROI >= 0,25 và 0 ca ùn. Giải thích mức 8.000đ là tiết kiệm 20% so với làm tay 10.000đ và tương ứng ROI tối thiểu 25%; giữ nguyên tiêu chí sau ký.
+- Phân tích nguồn sự thật/bản sao và drift REFUND-v4 từ 01/12/2026, tác động tới quyền hoàn, hạn mức duyệt và lỗi hãng. Đối chiếu cổng business theo ngân sách 2.000.000đ/ngày, tiền máy 1.500đ/ticket và phạm vi pilot đã thử.
+- Tổng hợp căn cứ v1/v2: nền sau cổng đạt 110/110; S3 đi từ 900.000đ hoàn sai và 35 lỗi hãng oan về 0 ở after, chi phí 4.405đ/ticket và ROI 1,27. Đọc thêm hoàn thiếu và chi phí nhóm thiếu mã đơn để không bỏ sót quyền lợi khách/phân khúc khó.
+- Kiểm chứng phương án 1–2 người duyệt bằng bản sao config trong bộ nhớ: S3 tăng từ 4.405đ lên 6.905đ/ticket khi bố trí thêm người thường trực. Thử riêng kịch bản 18 ca cần duyệt/giờ cho thấy 2 người giảm chờ tối đa từ 113,3 xuống 28,3 phút; dùng làm phương án dự phòng, không gán thành lưu lượng production.
+- Đồng bộ điều kiện dừng vận hành v2 với bản tiêu chí đã ký; cập nhật C11/C12 và ba dòng bắt buộc, hoàn thiện mục cá nhân trong TEAM.md và gom hồ sơ nộp trên kết quả kiểm tra cuối. Phần guard/monitor kỹ thuật là đóng góp phối hợp của nhóm, không tính là phần tôi tự triển khai.
 
 ### Bằng chứng
 
-Mã commit, mã lần chạy (`runs/<mã>`), dòng trong phiếu.
+- Commit nội dung CP2 `1f4e5c6`; commit ký `024b11e`, hash tiêu chí `a8a62335`; chốt vòng 1 `ac4dd6b`, hash `da2f415e`.
+- V1: `R-base-prepared-20261119-154450-db8f18`; v2 kiểm tra cuối: `R-S3-grade-20261119-171423-7fc336` và `R-base-after-20261119-171423-7fc336`.
+- Report cuối ghi `PASS-VISIBLE`, 13/13 test công khai đạt; integrity, criteria, visible, regression, monitor đều đạt; test ẩn chưa có trên máy.
+- [Bằng chứng kinh doanh](submission/runs/business-analysis-2A202604004.json); [báo cáo ba mốc](submission/runs/grade-report.md).
 
 ### Exit ticket
 
-Một điều học được, một điều còn chưa chắc.
+- **Điều học được:** giảm phí xử lý không thể bù cho hoàn sai hoặc phạt oan hãng; chi phí cần tính cả công duyệt, kiểm mẫu và phí trực. Phải tách quyền hoàn của khách khỏi quyền ghi lỗi hãng khi thiếu nguyên nhân.
+- **Điều còn chưa chắc:** độ trễ cập nhật nguyên nhân sau bão, tỷ lệ nhập sai và công đối soát thực tế chưa có trong dữ liệu mock; cần đo trong 7 ngày đầu pilot trước khi mở rộng.

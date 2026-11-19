@@ -3,7 +3,11 @@
   "business": {
     "daily_refund_cap_vnd": 2000000,
     "cost_budget_per_ticket_vnd": 1500,
-    "pilot_scope": {"mode": "all", "warehouses": [], "percent": 100},
+    "pilot_scope": {
+      "mode": "all",
+      "warehouses": [],
+      "percent": 100
+    },
     "roi_min": 0.25
   },
   "operations": {
@@ -13,10 +17,12 @@
     "review_capacity_per_hour": 6,
     "max_queue_wait_minutes": 60,
     "stop_conditions": [
-      "Hàng chờ có ca chờ quá 60 phút hoặc bị ùn cuối ca -> gọi thêm người duyệt dự phòng hoặc thu hẹp phạm vi pilot.",
-      "Phát hiện bất kỳ ca nào gửi kèm trường dữ liệu cá nhân (PII) cho bên thứ ba -> tắt ngay công tắc notify_carrier trong config/switches.json.",
-      "Ghi từ 2 lỗi hãng thiếu delay_cause hợp lệ trong một ngày hoặc có ca hoàn tiền sai do fail-open -> tắt file_carrier_fault và issue_refund.",
-      "Tổng tiền hoàn tự động vượt 2.000.000đ/ngày hoặc chi phí mỗi ticket vượt 10.000đ -> tạm dừng luồng tự động, chuyển người xử lý."
+      "Phát hiện bất kỳ khoản hoàn sai lớn hơn 0đ: giữ ca liên quan cho người duyệt, NV-TUNG tắt issue_refund trong tối đa 5 phút và NV-OANH đối soát; chưa mở pilot khi chưa xử lý xong.",
+      "Phát hiện từ 1 lỗi hãng oan: NV-TUNG tắt file_carrier_fault trong tối đa 5 phút; NV-OANH xác minh đúng kiện, nguyên nhân và trần lỗi trong ngày trước khi xem xét bật lại.",
+      "Phát hiện từ 1 lần lộ dữ liệu cá nhân cho bên thứ ba: NV-TUNG tắt notify_carrier trong tối đa 5 phút, lưu mã tham chiếu và phối hợp NV-HANH/NV-OANH xác minh bên nhận.",
+      "Có từ 1 ca bị ùn hoặc chờ quá 60 phút: không chọn Tiếp tục khi chưa khắc phục; NV-TUNG gọi thêm người duyệt dự phòng với công suất và chi phí tương ứng hoặc đo lại phương án thu hẹp.",
+      "Chi phí xử lý vượt 8.000đ/ticket hoặc ROI dưới 0,25: không chọn Tiếp tục; Sản phẩm và kinh doanh phân tích theo kho, đề xuất Thu hẹp hoặc Cải tiến thêm, giao PIC và hạn đo lại tối đa 24 giờ theo tiêu chí đã ký.",
+      "Không phát lệnh tự động làm vượt 2.000.000đ hoàn/ngày hoặc trần tiền máy 1.500đ/ticket; chuyển người duyệt khi chạm giới hạn. Trần mỗi khoản và tổng 300.000đ/khách/ngày phải được đối chiếu theo chính sách và ops_limits."
     ],
     "alert_channel": "#ops-logix-pilot",
     "decision_note": true,

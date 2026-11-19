@@ -36,6 +36,8 @@ Mỗi lệnh `lab10.eval` và `lab10.grade` tự ghi một dòng vào `runs/jour
 | 4 | `R-S3-grade-20261119-163012-641d82` | S3 · grade | Tổng kiểm `base · prepared · after` bằng `lab10.grade --incident S3` | `1.0 [1.0, 1.0]` | `1.0` | `0 · 0 · 0` | `0.0833` | `PASS-VISIBLE`: đạt `5/5` kiểm tra (`integrity`, `criteria`, `visible`, `regression`, `monitor`). |
 | 5 | `R-base-after-20261119-164821-d1e2fa` | base · after | Kiểm lại bộ nền với các chỉ số mới | `1.0 [1.0, 1.0]` | `1.0` | `0 · 0 · 0` | `0.2273` | 110/110 lượt đạt. |
 | 6 | `R-S3-grade-20261119-164821-d1e2fa` | S3 · grade | Kiểm lại ba mốc và hai chỉ số S3 bổ sung | `1.0 [1.0, 1.0]` | `1.0` | `0 · 0 · 0` | `0.0833` | `PASS-VISIBLE`, S3 after đạt 60/60 và hai chỉ số phân biệt S3 với bộ nền. |
+| 7 | `R-base-after-20261119-171423-7fc336` | base · after | Kiểm tra cuối của Phan Nguyễn Phan Anh sau khi đồng bộ điều kiện dừng với tiêu chí đã ký | `1.0 [1.0, 1.0]` | `1.0` | `0 · 0 · 0` | `0.2273` | 110/110 lượt đạt; chi phí 4.456đ/ticket, ROI 1,24. |
+| 8 | `R-S3-grade-20261119-171423-7fc336` | S3 · grade | Kiểm tra cuối trên cấu hình vận hành v2 và đối chiếu phần Sản phẩm và kinh doanh | `1.0 [1.0, 1.0]` | `1.0` | `0 · 0 · 0` | `0.0833` | PASS-VISIBLE; 60/60 lượt S3, không regression, không vượt trần; mã ba mốc ghi tại C12. |
 
 ---
 
@@ -284,7 +286,7 @@ thường biến một nhánh HOẶC thành VÀ: tác hại chỉ còn xảy ra 
 Ít nhất hai nhánh ở hai tầng khác nhau (kỹ thuật, kinh doanh, con người); mỗi lá có bằng chứng (ticket@seed, trường dữ liệu, hoặc một dòng của report).
 
 ```
-[ĐỈNH] Tác hại: Hãng MKD/DNB bị phạt oan 120.000đ/lỗi & khách bị hoàn sai/từ chối nhầm (cho ai: hãng vận chuyển MKD, khách hàng, LogiX; đo bằng: wrongful_carrier_faults = 35 base / 10 prepared, wrongful_refund_vnd = 900.000đ base, under_refund_vnd = 210.000đ prepared)
+[ĐỈNH] Tác hại: Hãng MKD/DNB bị ghi lỗi oan (MKD 120.000đ/lỗi; DNB 80.000đ/lỗi) & khách bị hoàn sai/từ chối nhầm (cho ai: hãng vận chuyển MKD, khách hàng, LogiX; đo bằng: wrongful_carrier_faults = 35 base / 10 prepared, wrongful_refund_vnd = 900.000đ base, under_refund_vnd = 210.000đ prepared)
  └─ HOẶC
  ├─ [1] Áp sai chính sách hết hạn REFUND-v3 thay vì REFUND-v4 vào ngày 2026-12-02 (tầng: dữ liệu / quy tắc chính sách)
  │ └─ vì: agent đọc cờ index_active = true cũ thay vì effective_from..to bằng chứng: ticket S3-01@11, S3-04@11 (base)
@@ -385,7 +387,8 @@ Vẽ lại cây ở C6. Ở mỗi nhánh đã xử lý, thêm một nút `VÀ [g
 | Rủi ro | Khả năng | Tác động | Người phụ trách (PIC, một người) | Dấu hiệu (metric nào, ngưỡng nào) | Xử lý | Ảnh hưởng bước đánh giá | Nhóm chức năng (GOVERN / MAP / MEASURE / MANAGE) |
 |---|---|---|---|---|---|---|---|
 | Điểm phát/kho nhập nhầm `delay_cause = "CARRIER"` cho đơn thực chất trễ do bão lũ (`FORCE_MAJEURE`) hoặc nhập thiếu `delay_cause` diện rộng trong mùa bão | Trung bình | Cao (phạt oan hãng `120.000đ`/lỗi, tranh chấp công nợ) | Lê Quý Toàn (`2A202603941`) | `missing_delay_cause_rate > 0.0` (ngưỡng báo động ngay khi `> 0`) hoặc `guard_intervention_rate` tăng đột biến kèm `wrongful_carrier_faults > 0` | `NV-OANH` đối soát danh sách đơn vùng bão cuối ca với hãng trước khi chốt công nợ; nếu nghi sai hàng loạt, `NV-TUNG` tắt `file_carrier_fault` trong `switches.json` | Nếu không kiểm soát tốt nguyên nhân đầu vào khi có bão, phải chọn `Thu hẹp` hoặc tắt `file_carrier_fault` | **MEASURE / MANAGE** |
-| Nhóm `policies` đổi phiên bản trên thực tế nhưng dữ liệu bảng `policies` chưa cập nhật kịp `effective_from`/`effective_to` | Thấp | Cao (áp sai hạn mức và điều kiện hoàn hàng loạt) | Phan Nguyễn Phan Anh (`2A202604004`) | `ops.refund.wrongful_refund_worst_day_vnd > 0` hoặc `ops.queue.trust == "chưa đạt"` | Rà soát bảng `policies` trước mốc chuyển đổi `48 giờ`; nếu phát hiện lệch, tắt `issue_refund` và chuyển duyệt thủ công cho `NV-HANH` | Quyết định mở rộng pilot phụ thuộc vào kiểm chứng sau mỗi kỳ đổi chính sách | **GOVERN / MAP** |
+| Nhóm `policies` đổi phiên bản trên thực tế nhưng bảng nguồn chưa cập nhật `effective_from`/`effective_to` | Thấp | Cao (áp sai hạn mức và điều kiện hoàn hàng loạt) | Phan Nguyễn Phan Anh (`2A202604004`) | Đối chiếu bảng với quyết định ban hành và ngày hiệu lực trước `48 giờ`; `policy_index_mismatch_rate > 0` chỉ phát hiện index lệch bảng, không xác nhận bảng nguồn đã đủ chính sách mới | Phan Anh phối hợp NV-HANH xác nhận phiên bản; khi thiếu căn cứ, NV-TUNG giữ luồng hoàn tự động để người duyệt. Không dùng nhãn hoàn sai offline làm telemetry tự có trong production | Chỉ xem xét mở rộng sau khi đối chiếu chính sách và đo lại | **GOVERN / MAP / MEASURE** |
+| Ticket thiếu mã đơn thuộc nhóm `?` luôn cần người xử lý, chi phí `10.359đ/ticket` cao hơn làm tay | Trung bình | Trung bình (bào mòn ROI khi tỷ trọng tăng) | Phan Nguyễn Phan Anh (`2A202604004`) | `ops.segments["?"].cost_per_ticket_vnd > 10000`, tỷ trọng nhóm thiếu mã đơn, chi phí tổng và ROI cuối ca | Đề xuất thu đủ mã đơn trước khi gọi trợ lý; giữ quyền xử lý thủ công cho khách, đo lại chi phí thay vì loại hết nhóm khó để tăng điểm | Hiện chi phí tổng vẫn dưới 8.000đ và ROI trên 0,25; nếu vượt ngưỡng thì Cải tiến thêm hoặc đo phương án Thu hẹp | **MAP / MEASURE / MANAGE** |
 
 ---
 
@@ -403,6 +406,8 @@ Ghi các dòng đổi sau sự cố. Mỗi dòng vẫn phải có một PIC có 
 | 2 · Dữ liệu | Xong | `C3.5` (tách rõ `effective_from..to` vs `index_active` và nghĩa của `delay_cause = null`) | Phan Nguyễn Phan Anh |
 | 7 · Vận hành | Xong | Đã bổ sung `missing_delay_cause_rate` vào `lab10/monitors.py` (`C8`, sáng đèn `0.0 -> 0.166667` trên `S3`) và Runbook 4–5 (`C11`) | Lê Quý Toàn |
 | 8 · Con người, pháp lý | Xong | Bổ sung chặn vượt trần `max_auto_strikes_per_carrier_per_day = 2` trong `_check_carrier_fault`; `wrongful_carrier_faults = 0` trên `S3` | Lê Quý Toàn |
+
+**Đối chiếu điều kiện dừng v2 với tiêu chí đã ký (Sản phẩm và kinh doanh):** B7.5 là hồ sơ v1 được giữ nguyên. Ở v2, chỉ cần một khoản hoàn sai, một lỗi hãng oan hoặc một lần lộ dữ liệu là giữ ca liên quan cho người duyệt và yêu cầu NV-TUNG tắt thao tác ghi bị ảnh hưởng trong tối đa 5 phút. Có từ 1 ca ùn, chi phí trên 8.000đ/ticket hoặc ROI dưới 0,25 thì chưa đủ điều kiện Tiếp tục; không đợi chi phí vượt 10.000đ hoặc phát sinh lỗi hãng thứ hai. Các điều kiện này đã được đồng bộ vào `operations.stop_conditions`; đây là quy trình cho người trực, không phải bằng chứng mọi tín hiệu đã có cảnh báo tự động. Khi gọi thêm người phải đồng thời điều chỉnh `reviewers_on_shift` và `review_capacity_per_hour`, rồi đối chiếu lại chi phí, ROI và hàng chờ.
 
 ### Runbook 4 · Sau sự cố trên thẻ (vòng 2)
 
@@ -428,36 +433,43 @@ Ghi các dòng đổi sau sự cố. Mỗi dòng vẫn phải có một PIC có 
 
 ## C12 · Quyết định Gate 1 · v2 (phút 185–200)
 
-Quyết định phải khớp bằng chứng và khớp tiêu chí đã ký. Chọn **Tiếp tục** khi report còn dòng vượt trần, hoặc còn ngưỡng đã ký
-chưa đạt, là quyết định không đạt. **Thu hẹp**, **Cải tiến thêm**, **Dừng** có lý do và có số thì đều là quyết định đạt.
-Cột v1 nằm ở Phiếu B mục B8; không sửa cột đó.
+**Người phụ trách nội dung:** Phan Nguyễn Phan Anh (`2A202604004`), Sản phẩm và kinh doanh. Cột v1 ở B8 và bản tiêu chí đã ký được giữ nguyên; phần dưới dùng kết quả kiểm tra cuối trên cấu hình v2.
 
-| | **v2** (phút 185–200, SAU sự cố) |
+| | **v2** (SAU sự cố S3) |
 |---|---|
-| Commit ký tiêu chí | `024b11e` (SHA-256 `a8a62335...`, giữ nguyên như v1) |
-| Hash chốt cổng vòng 1 | `da2f415e` (giữ nguyên như v1) |
-| Mã lần chạy dùng làm bằng chứng | thẻ, mốc base: `R-S3-before-20261119-163013-641d82` · prepared: `R-S3-prepared-20261119-163013-641d82` · after: `R-S3-after-20261119-163013-641d82` (và `R-S3-after-20261119-163012-641d82`, `R-base-after-20261119-163126-641d82`) |
-| Còn dòng "vượt trần" nào trong report? (hàng chờ, chi phí, ROI, trần tiền, pháp lý) | Không (`wait_max_min = 0.0 phút`, `queue_stuck = 0`, `cost_per_ticket = 4405đ <= 8000đ` trên S3 và `4456đ` trên bộ nền, `ROI = 1.27` trên S3 / `1.24` trên bộ nền, `auto_refund = 109400đ <= 2000000đ`, `pii_leaks = 0`, `wrongful_carrier_faults = 0`). |
-| Kho hoặc hãng có số xấu nhất: Trên `S3` trước khi sửa, hãng **`MKD`** (`pass 0.2857`, `25` lỗi oan) và kho **`HN`** (`900.000đ` hoàn sai); sau khi sửa (`after`), tất cả kho (`CT` `762đ`, `DN` `764đ`, `HCM` `761đ`, `HN` `4190đ`) và 4 hãng đều đạt `pass = 1.0`, `0` hoàn sai, `0` lỗi oan. Nếu chỉ nhìn phân khúc này, quyết định có đổi không? | Không đổi quyết định, vì sau sửa cả `MKD` lẫn `HN` đều đạt `100%` và rẻ hơn làm tay `10.000đ/ticket`. |
-| Quyết định (khoanh một) | **Tiếp tục** · Thu hẹp · Cải tiến thêm · Dừng |
-| Bằng chứng 1: mã lần chạy + chỉ số bắt buộc nào đạt / chưa | `R-S3-grade-20261119-163012-641d82` (`after`): đạt 5/5 ngưỡng `required` trên cả `S3` (`pass_rate = 1.0 >= 0.98`, `pass_k = 1.0 >= 0.95`, `wrongful_refund_vnd = 0`, `wrongful_carrier_faults = 0`, `pii_leaks = 0`) lẫn `base` (`110/110`, không regression). |
-| Bằng chứng 2 | Đạt đủ cả `nice_to_have` và `business_ops`: `escalation_rate = 0.0833 <= 0.25` (S3) / `0.2273` (base); `cost_per_ticket = 4405đ <= 8000đ` (S3); `ROI = 1.27 >= 0.25`; `queue_stuck = 0`; không kho nào đắt hơn làm tay. |
-| Bằng chứng 3 | 13/13 unit tests pass; `lab10.grade --incident S3` đạt `PASS-VISIBLE` (`integrity ✅`, `criteria ✅`, `visible ✅`, `regression ✅`, `monitor ✅` với `missing_delay_cause_rate` sáng từ `0.0` → `0.166667`). |
-| Khớp dòng nào trong `decision_rule` đã ký? | Khớp dòng **`Tiếp tục`**: mọi ngưỡng `required` và `business_ops` trên cả bộ nền lẫn gói sự cố `S3` ở mốc `after` đều đạt, không vượt trần, không regression so với `base`, độ phủ pilot `1.0 > 0`, mọi kho và hãng đều đạt. |
-| Nếu Thu hẹp: cắt kho nào / còn bao nhiêu phần trăm / mấy người trực, và ticket bị cắt đi đâu | (không áp dụng cho v2 — chỉ giữ phương án thu hẹp trong Runbook 5 nếu tải thật tăng gấp 3 hoặc tracking kho hỏng diện rộng) |
-| Nếu Cải tiến thêm: giả thuyết cụ thể (nhánh nào của fault tree) + hạn | (không áp dụng) |
-| Nếu Dừng: bài học ghi lại | (không áp dụng) |
-| Ngày quyết định lại (trừ khi Dừng) | `2026-11-26` (kiểm tra sau tuần đầu pilot thật và trước khi mở rộng quy mô, với thành phần 4 thành viên + đại diện nghiệp vụ `NV-HANH`, `NV-OANH`, `NV-TUNG`). |
-| PIC ký | Phan Nguyễn Phan Anh (`2A202604004`) · Lê Quý Toàn (`2A202603941`) |
+| Commit ký tiêu chí | `024b11e`, ký `2026-11-19T15:43:37`, SHA-256 `a8a62335...`; không đổi. |
+| Hash chốt cổng vòng 1 | `da2f415e`; bản chốt được kiểm tra còn nguyên. |
+| Mã lần chạy dùng làm bằng chứng | S3 base: `R-S3-before-20261119-171423-7fc336`; prepared: `R-S3-prepared-20261119-171423-7fc336`; after: `R-S3-after-20261119-171423-7fc336`. Tổng kiểm: `R-S3-grade-20261119-171423-7fc336`. Bộ nền after: `R-base-after-20261119-171423-7fc336`. |
+| Còn dòng vượt trần nào? | Không. Bộ nền: 4.456đ/ticket, ROI 1.24, 0 ca ùn. S3: 4.405đ/ticket, ROI 1.27, 0 ca ùn; hoàn sai/lỗi hãng oan/PII đều 0. Trần tiền máy, ngân sách hoàn và mọi ngưỡng bắt buộc đều đạt. |
+| Kho hoặc hãng có số xấu nhất; chỉ nhìn phân khúc đó có đổi quyết định không? | Trước sửa, MKD có 25/35 lỗi hãng oan và HN có 900.000đ hoàn sai trên 60 lượt S3. Sau sửa, 4 kho và các hãng trong S3 đều đạt 100%; kho HN có chi phí phân khúc cao nhất 4.190đ/ticket. Không đổi quyết định. Riêng nhóm `?` trên bộ nền tốn 10.359đ/ticket, đã ghi rủi ro ở C10 để theo dõi tỷ trọng; không bỏ qua nhóm này chỉ vì mô hình không tính nó là kho thật. |
+| Quyết định | **Tiếp tục** pilot trong phạm vi đã đánh giá, có giám sát và điều kiện dừng. |
+| Bằng chứng 1 | `R-S3-grade-20261119-171423-7fc336`: S3 after đạt 60/60 lượt, pass_rate = 1, pass_k = 1, hoàn sai = 0đ, lỗi hãng oan = 0, PII = 0; bộ nền đạt 110/110, không regression. |
+| Bằng chứng 2 | `R-S3-after-20261119-171423-7fc336`: chi phí 4.405đ <= 8.000đ, ROI 1,27 >= 0,25, 0 ca ùn, độ phủ 100%, trần hoàn tự động lớn nhất 109.400đ <= 2.000.000đ. Bộ nền: 4.456đ/ticket, ROI 1,24. |
+| Bằng chứng 3 | 13/13 test công khai đạt. Tổng kiểm: integrity, criteria, visible, regression, monitor đều đạt; test ẩn chưa có trên máy. `missing_delay_cause_rate` = 10/60, `policy_index_mismatch_rate` = 60/60 và `carrier_strike_cap_hit_rate` = 10/60 trên S3. |
+| Khớp dòng nào trong decision_rule đã ký? | Dòng **Tiếp tục**: mọi ngưỡng required/business_ops đạt trên cả nền và S3 after, không vượt trần, không regression, độ phủ > 0. escalation_rate = 22,73% trên nền và 8,33% trên S3 đều dưới 25%. |
+| Nếu Thu hẹp: cắt kho nào / còn bao nhiêu phần trăm / mấy người trực, ticket bị cắt đi đâu | Không áp dụng tại v2. Giữ `pilot_scope: all`, 100% ticket trong bộ thử, 1 người duyệt/6 ca mỗi giờ. Nếu cần Thu hẹp sau này phải có report của phạm vi còn lại > 0 và nơi nhận ticket ngoài phạm vi. |
+| Nếu Cải tiến thêm: giả thuyết cụ thể + hạn | Không chọn tại kết quả hiện tại. Nếu phát sinh vi phạm, giao PIC, giả thuyết và hạn đo lại <= 24 giờ theo bản tiêu chí, hoãn pilot trước khi có đủ bằng chứng. |
+| Nếu Dừng: bài học ghi lại | Không áp dụng tại v2; các ngưỡng Dừng trong tiêu chí đã ký vẫn có hiệu lực. |
+| Ngày quyết định lại | 26/11/2026 sau tuần pilot đầu; kiểm tra ngay nếu chạm ngưỡng dừng. Phan Anh tổng hợp kinh tế; NV-HANH xác nhận công suất duyệt, NV-OANH đối soát hãng và NV-TUNG điều phối. |
+| PIC ký | Phan Nguyễn Phan Anh (`2A202604004`) · Lê Quý Toàn (`2A202603941`). |
 
 **Chỉ ở v2**
-- Quyết định đổi hay giữ so với v1? Vì con số nào: **Giữ quyết định `Tiếp tục`** (pilot giới hạn dưới giám sát cổng mới), vì ở mốc `after` sau khi sửa 2 lỗ hổng của `S3`, cả 5 ngưỡng an toàn & chất lượng (`pass_rate = 1.0`, `pass_k = 1.0`, hoàn sai `0đ`, lỗi hãng oan `0`, PII `0`) và kinh doanh (`4405đ`, `ROI 1.27`, `0` ca ùn) đều đạt hoàn toàn trên cả `base` và `S3`.
-- Report tự kiểm tra: mã lần chạy `R-S3-grade-20261119-163012-641d82` · ô nào còn đỏ (nguyên nhân × tầng): **Không còn ô đỏ** ở các mục tự kiểm (`1 integrity ✅`, `2 criteria ✅`, `3 visible ✅`, `5 regression ✅`, `6 monitor ✅`; mục `4 hidden` chờ team chấm chạy sau buổi học).
-- Cổng vòng 1 (mốc prepared) đã đỡ được gì trước khi bàn biết sự cố, và bỏ sót gì: **Đỡ được toàn bộ nhánh drift chính sách `REFUND-v4`** (`wrongful_refund_vnd` giảm ngay từ `900.000đ` xuống `0đ`, `wrongful_carrier_faults` giảm từ `35` xuống `10`) nhờ `pre_guard` ghim chính sách theo ngày và cổng PII. **Bỏ sót**: (1) từ chối nhầm `210.000đ` hoàn phí cho khách khi `delay_cause = null` (`S3-20`, `S3-21`), và (2) chưa giới hạn `max_auto_strikes_per_carrier_per_day = 2` (`10` lỗi oan `S3-42`, `S3-43`).
-- Report ghi "được phép cân nhắc Tiếp tục" hay "không đủ căn cứ"? Quyết định của bàn có khớp không: Report ghi **`Được phép cân nhắc 'Tiếp tục'`**. Quyết định **`Tiếp tục`** của bàn khớp hoàn toàn với report và `decision_rule` đã ký.
-- Một thứ bộ thử hôm nay chưa đo, và nó ảnh hưởng quyết định ra sao: Chưa đo được trường hợp nhân viên kho nhập **sai** hẳn `delay_cause` (ví dụ gán nhầm `"CARRIER"` thay vì `"FORCE_MAJEURE"`) và chưa có kết quả bộ test ẩn của team chấm; vì vậy quyết định `Tiếp tục` đi kèm điều kiện bắt buộc `NV-OANH` đối soát danh sách lỗi hãng vùng bão mỗi cuối ca trong tuần đầu pilot.
 
-**Ba dòng bắt buộc** (chép nguyên ba câu này sang `submission/submission.json`, mục `three_lines`)
-1. Một giả định về môi trường mà thiết kế của đội đang dựa vào, có thể sai ngoài thực tế: Thiết kế giả định dữ liệu nguồn `policies` được cập nhật đúng ngày hiệu lực và nhân viên kho nhập đúng mã nguyên nhân giao trễ (`delay_cause`) thay vì gán nhầm nguyên nhân hãng cho đơn trễ do thiên tai.
-2. Gate của đội chỉ GIẢM khả năng hay thực sự NGĂN được tác hại? Vì sao: Cổng code và cấu hình hiện tại NGĂN hẳn các lỗi đọc nhầm cờ `index_active` cũ, tự động quy lỗi hãng khi thiếu `delay_cause` và vượt trần 2 lỗi/hãng/ngày từ phía trợ lý; nhưng với trường hợp dữ liệu đầu vào trong DB bị nhập sai sẵn nguyên nhân thì hệ thống chỉ GIẢM thiệt hại qua trần lỗi mỗi ngày và cần đối soát con người.
-3. Vì data là mock, cần đo lại gì trong pilot thật trước Bước đánh giá 2: Trong tuần đầu pilot thật cần đo lại độ trễ cập nhật trường `delay_cause` sau bão/cao điểm, tỉ lệ sai lệch khi nhân viên phân loại nguyên nhân giao trễ giữa hãng và thiên tai, thời gian chờ duyệt thực tế khi phát sinh khiếu nại và chi phí nhân sự đối soát cuối ca.
+- **Đổi hay giữ so với v1, vì con số nào:** giữ Tiếp tục. Prepared trên S3 còn 10 lỗi hãng oan và 210.000đ hoàn thiếu; after đưa cả hai về 0, đồng thời chi phí chỉ tăng từ 4.388đ lên 4.405đ/ticket. ROI 1,27 vẫn cao hơn 0,25 và số ca ùn bằng 0. `under_refund_vnd` được đọc thêm để bảo vệ quyền lợi khách, không sửa hoặc thêm ngưỡng vào bản tiêu chí đã ký.
+- **Report tự kiểm tra và ô còn đỏ:** `R-S3-grade-20261119-171423-7fc336` đạt PASS-VISIBLE. Năm mục nhìn thấy đều đạt; mục hidden chưa có kết quả, không diễn giải thành đã vượt qua bài kiểm tra ẩn.
+- **Cổng prepared đỡ gì và bỏ sót gì:** đỡ toàn bộ 900.000đ hoàn sai và 25/35 lỗi hãng oan so với base nhờ ghim chính sách theo ngày. Bỏ sót việc từ chối nhầm khách khi thiếu nguyên nhân và việc ghi vượt 2 lỗi/hãng/ngày; after sửa hai nhánh này.
+- **Report có cho cân nhắc Tiếp tục không, quyết định có khớp không:** `ceilings.continue_allowed = true`, danh sách vượt trần và ngưỡng bắt buộc chưa đạt đều rỗng. Quyết định phù hợp bằng chứng trên bộ thử hiện có.
+- **Bằng chứng còn thiếu và tác động:** chưa có tải production, chính sách nguồn nhập sai hoặc kết quả test ẩn. Việc mở rộng sang kho/loại ticket chưa được phủ phải đo lại. Trong 7 ngày đầu, NV-OANH đối soát lỗi hãng cuối ca; Phan Anh theo dõi chi phí, ROI và nhóm thiếu mã đơn; NV-TUNG quyết định dừng theo tiêu chí.
+
+**Thẩm định kinh doanh bổ sung**
+
+- `escalation_rate` chỉ đếm ca trợ lý chuyển người; `review_rate` gồm cả kiểm mẫu quyết định tự động. Bộ nền lần lượt là 22,73% và 27,27%; S3 là 8,33% và 16,67%. Không so review_rate trực tiếp với ngưỡng escalation_rate 25%.
+- Với tải hiện tại, tăng lên 2 người/12 ca mỗi giờ khiến nền tăng chi phí từ 4.456đ lên 5.820đ/ticket (ROI 1,24 xuống 0,72), S3 từ 4.405đ lên 6.905đ (ROI 1,27 xuống 0,45); thời gian chờ vốn đã bằng 0 nên chưa cần tăng thường trực.
+- Kịch bản kiểm riêng hàng chờ với **18 ca cần duyệt trong 60 phút** cho chờ tối đa 113,3 phút và 8 ca ùn ở 1 người; 2 người/12 ca mỗi giờ giảm còn 28,3 phút, 0 ca ùn. Đây là giả định tải để thử phương án dự phòng, không phải lưu lượng production đã đo. Bằng chứng: `submission/runs/business-analysis-2A202604004.json`.
+- Đối chiếu nghiệp vụ bổ sung: REFUND-v3 có `min_days_fee = 3`, REFUND-v4 là `2` theo `data/world.json`; mốc 4 ngày được ghi ở B2 là sai dẫn chiếu. Giữ nguyên hồ sơ B2 v1; kết luận T-002 trễ 2 ngày chưa đủ điều kiện vẫn đúng.
+
+**Ba dòng bắt buộc** (khớp `submission/submission.json`)
+
+1. **Giả định môi trường:** Thiết kế giả định bảng policies có đủ phiên bản và ngày hiệu lực, đặc biệt mốc 01/12/2026, đồng thời kho ghi đúng delay_cause; bảng nguồn thiếu chính sách hoặc gán nhầm CARRIER cho đơn trễ do bão vẫn có thể làm hệ thống quyết định sai.
+2. **Giảm hay ngăn tác hại:** Khi bảng nguồn đúng và mọi lệnh ghi đi qua cổng, hệ thống NGĂN ba nhánh áp nhầm index_active cũ, ghi lỗi hãng khi thiếu nguyên nhân và tự động ghi quá 2 lỗi/hãng/ngày; với dữ liệu nguồn nhập sai hoặc thao tác thủ công ngoài luồng, cổng chỉ GIẢM thiệt hại và cần NV-OANH đối soát cuối ca.
+3. **Đo lại trong pilot thật:** Trong 7 ngày pilot đầu, đo độ trễ cập nhật delay_cause và tỷ lệ phân loại sai nguyên nhân, thời gian chờ duyệt tối đa so với SLA 60 phút, chi phí xử lý so với 8.000đ/ticket và ROI so với 0,25; đo riêng giờ cao điểm, kiểm mẫu 10% và công đối soát ngoài mô hình trước khi đề xuất mở rộng.

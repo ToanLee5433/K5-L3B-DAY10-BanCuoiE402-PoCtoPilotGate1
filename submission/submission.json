@@ -10,8 +10,8 @@
   "decision_v1": "Tiếp tục",
   "decision_v2": "Tiếp tục",
   "three_lines": {
-    "environment_assumption": "Thiết kế giả định dữ liệu nguồn policies được cập nhật đúng ngày hiệu lực và nhân viên kho nhập đúng mã nguyên nhân giao trễ (delay_cause) thay vì gán nhầm nguyên nhân hãng cho đơn trễ do thiên tai.",
-    "reduce_or_prevent": "Cổng code và cấu hình hiện tại NGĂN hẳn các lỗi đọc nhầm cờ index_active cũ, tự động quy lỗi hãng khi thiếu delay_cause và vượt trần 2 lỗi/hãng/ngày từ phía trợ lý; nhưng với trường hợp dữ liệu đầu vào trong DB bị nhập sai sẵn nguyên nhân thì hệ thống chỉ GIẢM thiệt hại qua trần lỗi mỗi ngày và cần đối soát con người.",
-    "measure_in_pilot": "Trong tuần đầu pilot thật cần đo lại độ trễ cập nhật trường delay_cause sau bão/cao điểm, tỉ lệ sai lệch khi nhân viên phân loại nguyên nhân giao trễ giữa hãng và thiên tai, thời gian chờ duyệt thực tế khi phát sinh khiếu nại và chi phí nhân sự đối soát cuối ca."
+    "environment_assumption": "Thiết kế giả định bảng policies có đủ phiên bản và ngày hiệu lực, đặc biệt mốc 01/12/2026, đồng thời kho ghi đúng delay_cause; bảng nguồn thiếu chính sách hoặc gán nhầm CARRIER cho đơn trễ do bão vẫn có thể làm hệ thống quyết định sai.",
+    "reduce_or_prevent": "Khi bảng nguồn đúng và mọi lệnh ghi đi qua cổng, hệ thống NGĂN ba nhánh áp nhầm index_active cũ, ghi lỗi hãng khi thiếu nguyên nhân và tự động ghi quá 2 lỗi/hãng/ngày; với dữ liệu nguồn nhập sai hoặc thao tác thủ công ngoài luồng, cổng chỉ GIẢM thiệt hại và cần NV-OANH đối soát cuối ca.",
+    "measure_in_pilot": "Trong 7 ngày pilot đầu, đo độ trễ cập nhật delay_cause và tỷ lệ phân loại sai nguyên nhân, thời gian chờ duyệt tối đa so với SLA 60 phút, chi phí xử lý so với 8.000đ/ticket và ROI so với 0,25; đo riêng giờ cao điểm, kiểm mẫu 10% và công đối soát ngoài mô hình trước khi đề xuất mở rộng."
   }
 }
