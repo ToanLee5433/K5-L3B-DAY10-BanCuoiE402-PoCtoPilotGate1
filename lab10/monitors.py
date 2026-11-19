@@ -19,7 +19,13 @@ def escalation_rate(trials):
     return sum(t["status"] == "escalated" for t in trials) / max(1, len(trials))
 
 
+def guard_intervention_rate(trials):
+    return sum(any(e.get("type") == "gate" and e.get("action") in ("deny", "escalate", "modify")
+                   for e in t["events"]) for t in trials) / max(1, len(trials))
+
+
 MONITORS = {
     "escalation_rate": escalation_rate,     # có sẵn; KHÔNG tính là metric mới của đội
+    "guard_intervention_rate": guard_intervention_rate,
 }
 STARTER_MONITORS = ("escalation_rate",)

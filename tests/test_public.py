@@ -34,6 +34,31 @@ class TestBase(unittest.TestCase):
         after = set(summarize(self.run_with("lab10.guards"))["failed"])
         self.assertFalse(sorted(after - before))
 
+    def test_tracking_overrides_customer_claim_before_refund_or_carrier_fault(self):
+        ticket = next(t for t in self.tickets if t["ticket_id"] == "T-002")
+        trials = run_suite(self.world, [ticket], importlib.import_module("lab10.guards"), {})
+        self.assertEqual(len(trials), len(SEEDS))
+        for trial in trials:
+            self.assertEqual(trial["ledger"], [])
+            self.assertEqual(trial["fault_rows"], [])
+        self.assertEqual(trials[SEEDS.index(55)]["status"], "escalated")
+
+    def test_carrier_notice_excludes_customer_supplied_and_recipient_data(self):
+        trials = self.run_with("lab10.guards")
+        for trial in trials:
+            for message in trial["outbound"]:
+                if message["to"].startswith("carrier:"):
+                    self.assertEqual(set(message["payload"]), {"order_id", "parcel_id", "district", "delay_days"})
+                    self.assertNotIn("customer_note", message["payload"])
+                    self.assertNotIn("recipient_contact", message["payload"])
+
+    def test_guard_intervention_monitor_records_prevention(self):
+        baseline = self.run_with("lab10._noop_guards")
+        guarded = self.run_with("lab10.guards")
+        monitor = importlib.import_module("lab10.monitors").guard_intervention_rate
+        self.assertEqual(monitor(baseline), 0)
+        self.assertGreater(monitor(guarded), 0)
+
     def test_deterministic(self):
         a = [(t["ticket_id"], t["seed"], t["status"], t["paid_vnd"]) for t in self.run_with("lab10._noop_guards")]
         b = [(t["ticket_id"], t["seed"], t["status"], t["paid_vnd"]) for t in self.run_with("lab10._noop_guards")]
